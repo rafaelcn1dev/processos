@@ -1,8 +1,10 @@
 package br.com.processos.processos.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDateTime;
+
 
 
 @Entity
@@ -11,6 +13,8 @@ public class Processo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Pattern(regexp = "\\d{7}-\\d{2}\\.\\d{4}\\.\\d\\.\\d{2}\\.\\d{4}", message = "NPU deve estar no formato 1111111-11.1111.1.11.1111")
+    @Column(nullable = false, unique = true)
     private String npu;
     private LocalDateTime dataCadastro;
     private LocalDateTime dataVisualizacao;
