@@ -42,18 +42,11 @@ public class ProcessoService {
         return repository.save(processo);
     }
 
-    public Processo updateProcesso(Long id, Processo processoDetails, MultipartFile file) throws IOException {
+    public Processo updateProcesso(Long id, Processo processoDetails) throws IOException {
         Processo processo = getProcessoById(id);
         processo.setNpu(processoDetails.getNpu());
         processo.setMunicipio(processoDetails.getMunicipio());
         processo.setUf(processoDetails.getUf());
-        if (file != null && !file.isEmpty()) {
-            String fileName = file.getOriginalFilename();
-            Path filePath = Paths.get(UPLOAD_DIR + fileName);
-            Files.createDirectories(filePath.getParent());
-            Files.write(filePath, file.getBytes());
-            processo.setDocumentoPath(fileName);
-        }
         processo.setDataVisualizacao(processoDetails.getDataVisualizacao());
         return repository.save(processo);
     }

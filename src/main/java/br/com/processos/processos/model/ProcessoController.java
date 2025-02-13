@@ -28,13 +28,19 @@ public class ProcessoController {
     public ResponseEntity<Processo> createProcesso(@RequestParam("npu") String npu,
                                                    @RequestParam("municipio") String municipio,
                                                    @RequestParam("uf") String uf,
-                                                   @RequestParam("file") MultipartFile file) {
+                                                   @RequestParam(value = "documentoPath", required = false) MultipartFile documentoPath) {
         try {
             Processo processo = new Processo();
             processo.setNpu(npu);
             processo.setMunicipio(municipio);
             processo.setUf(uf);
-            service.saveProcesso(processo, file);
+
+            if (documentoPath != null && !documentoPath.isEmpty()) {
+                service.saveProcesso(processo, documentoPath);
+            } else {
+                service.saveProcesso(processo, null);
+            }
+
             return ResponseEntity.ok(processo);
         } catch (IOException e) {
             return ResponseEntity.status(500).body(null);
@@ -58,14 +64,13 @@ public class ProcessoController {
     public ResponseEntity<Processo> updateProcesso(@PathVariable Long id,
                                                    @RequestParam("npu") String npu,
                                                    @RequestParam("municipio") String municipio,
-                                                   @RequestParam("uf") String uf,
-                                                   @RequestParam("file") MultipartFile file) {
+                                                   @RequestParam("uf") String uf) {
         try {
             Processo processoDetails = new Processo();
             processoDetails.setNpu(npu);
             processoDetails.setMunicipio(municipio);
             processoDetails.setUf(uf);
-            Processo updatedProcesso = service.updateProcesso(id, processoDetails, file);
+            Processo updatedProcesso = service.updateProcesso(id, processoDetails);
             return ResponseEntity.ok(updatedProcesso);
         } catch (IOException e) {
             return ResponseEntity.status(500).body(null);
