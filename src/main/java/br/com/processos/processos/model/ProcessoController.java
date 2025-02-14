@@ -1,28 +1,26 @@
 package br.com.processos.processos.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/api/processos")
 public class ProcessoController {
     @Autowired
     private ProcessoService service;
-
-    /*
-    * @PostMapping
-    public ResponseEntity<Processo> createProcesso(@Valid @RequestBody Processo processo) {
-        Processo savedProcesso = service.saveProcesso(processo);
-        return ResponseEntity.ok(savedProcesso);
-    }*/
 
     @PostMapping
     public ResponseEntity<Processo> createProcesso(@RequestParam("npu") String npu,
@@ -78,8 +76,26 @@ public class ProcessoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProcesso(@PathVariable Long id) {
+    public ResponseEntity<Processo> deleteProcesso(@PathVariable Long id) {
+        Processo processo = service.getProcessoById(id);
         service.deleteProcesso(id);
-        return ResponseEntity.ok("Processo com ID " + id + " foi deletado com sucesso.");
+        return ResponseEntity.ok(processo);
+    }
+
+    @GetMapping("/download/{id}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable Long id) throws IOException {
+        Processo processo = service.getProcessoById(id);
+        Path filePath = Paths.get(processo.getDocumentoPath());
+        Resource resource = new UrlResource(filePath.toUri());
+
+        String contentType = Files.probeContentType(filePath);
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filePath.getFileName().toString() + "\"")
+                .body(resource);
     }
 }

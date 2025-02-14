@@ -20,15 +20,14 @@ public class ProcessoService {
     @Autowired
     private ProcessoRepository repository;
 
-    /*public Processo saveProcesso(Processo processo) {
-        return repository.save(processo);
-    }*/
-
     public Processo saveProcesso(Processo processo, MultipartFile file) throws IOException {
-        String fileName = file.getOriginalFilename();
-        Path filePath = Paths.get(UPLOAD_DIR + fileName);
-        Files.createDirectories(filePath.getParent());
-        Files.write(filePath, file.getBytes());
+        if (file != null && !file.isEmpty()) {
+            String fileName = file.getOriginalFilename();
+            Path filePath = Paths.get(UPLOAD_DIR + fileName);
+            Files.createDirectories(filePath.getParent());
+            Files.write(filePath, file.getBytes());
+            processo.setDocumentoPath(filePath.toString());
+        }
         return repository.save(processo);
     }
 
