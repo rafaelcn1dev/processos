@@ -1,5 +1,7 @@
-package br.com.processos.processos.model;
+package br.com.processos.processos.controller;
 
+import br.com.processos.processos.model.Processo;
+import br.com.processos.processos.service.ProcessoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

@@ -1,4 +1,4 @@
-package br.com.processos.processos.model;
+package br.com.processos.processos.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

@@ -1,5 +1,8 @@
-package br.com.processos.processos.model;
+package br.com.processos.processos.service;
 
+import br.com.processos.processos.model.Processo;
+import br.com.processos.processos.exception.ResourceNotFoundException;
+import br.com.processos.processos.repository.ProcessoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
